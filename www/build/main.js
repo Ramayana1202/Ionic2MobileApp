@@ -2828,7 +2828,7 @@ var HttpClientHelper = (function () {
     HttpClientHelper.prototype.getAsyncDataSet = function (action, params) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
-            var p, k, str;
+            var p, k;
             return __generator(this, function (_a) {
                 // Support easy query params for GET requests
                 if (params) {
@@ -2840,7 +2840,7 @@ var HttpClientHelper = (function () {
                     // a search field set in options.
                     this._options.search = !this._options.search && p || this._options.search;
                 }
-                str = this.url + '/' + this._controller + '/' + action;
+                //let str = this.url + '/' + this._controller + '/' + action;
                 return [2 /*return*/, new Promise(function (resolve) {
                         _this.http.get(_this.url + '/' + _this._controller + '/' + action, _this._options)
                             .map(function (res) { return res.json(); })
@@ -2917,9 +2917,10 @@ var HttpClientHelper = (function () {
 }());
 HttpClientHelper = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["B" /* Injectable */])(),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["b" /* Http */]) === "function" && _a || Object])
 ], HttpClientHelper);
 
+var _a;
 //# sourceMappingURL=http-helper.js.map
 
 /***/ })

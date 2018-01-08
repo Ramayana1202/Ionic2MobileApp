@@ -116,7 +116,7 @@ export class HttpClientHelper {
       // a search field set in options.
       this._options.search = !this._options.search && p || this._options.search;
     }
-    let str = this.url + '/' + this._controller + '/' + action;
+    //let str = this.url + '/' + this._controller + '/' + action;
     return new Promise(resolve => {
       this.http.get(this.url + '/' + this._controller + '/' + action, this._options)
         .map(res => res.json())
