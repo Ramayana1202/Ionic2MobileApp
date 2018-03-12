@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+﻿import { Component, ViewChild } from '@angular/core';
 import { Platform, Nav, Config } from 'ionic-angular';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -15,9 +15,14 @@ import { Settings } from '../providers/providers';
 import { Login } from '../providers/login';
 
 import { TranslateService } from '@ngx-translate/core'
+//import { EventManagementPage } from '../pages/event-management/event-devex';
+import { EventManagementPage1 } from '../pages/event-management/event-management';
+import { TaskManagementPage } from '../pages/task-management/task-management';
+import { HubHelper } from '../providers/hub-helper';
+import { HttpClientHelper } from '../http-client/http-helper';
 
 @Component({
-  templateUrl: 'app.html'
+  templateUrl: 'app.html' 
 })
 export class MyApp {
   rootPage = FirstRunPage;
@@ -26,12 +31,18 @@ export class MyApp {
 
   isLogin = false;
 
+  hubHelper: HubHelper;
+
+
   pages: any[] = [
     { title: 'Login', component: LoginPage },
     { title: 'Report Complete', component: ReportCompletePage },
     { title: 'Inventory Transfer', component: InventoryTransferPage },
     { title: 'Picked Confirm', component: PickedConfirmPage },
-    { title: 'Settings', component: SettingsPage }
+    { title: 'Settings', component: SettingsPage },
+     {title:'Task', component:TaskManagementPage},
+    { title: 'Event', component: EventManagementPage1},
+    
   ]
 
   constructor(private translate: TranslateService,
@@ -40,9 +51,16 @@ export class MyApp {
     private config: Config,
     private statusBar: StatusBar,
     private splashScreen: SplashScreen,
-    public login: Login, ) {
+    public login: Login,
+    private httpHelper: HttpClientHelper,) {
 
     this.initTranslate();
+
+    this.hubHelper = new HubHelper();
+    this.hubHelper.domain = this.httpHelper.url + "/SignalR";
+    this.hubHelper.hubName = "notificationClient";
+    this.hubHelper.addEvent("UpdateNotification", this.updateNotification.bind(this));
+    this.hubHelper.start();
   }
 
   ionViewDidLoad() {
@@ -51,8 +69,26 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+
+
     });
+
+   
   }
+
+  async updateNotification(content: any) {
+  
+    console.log(content.Detail);
+    var title = "A new task was assigned to you";
+    var options = { body: content.Detail, icon: "" };
+    var allowNotify = await Notification.requestPermission();
+    if (allowNotify != "granted") return;
+    var notify = new Notification(title, options);
+    setTimeout(notify.close.bind(notify), 6000);
+
+  }
+
+ 
 
   initTranslate() {
     // Set the default language for translation strings, and the current language.

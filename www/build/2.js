@@ -1,14 +1,14 @@
 webpackJsonp([2],{
 
-/***/ 315:
+/***/ 1359:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InventoryTransferPageModule", function() { return InventoryTransferPageModule; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TaskDetailPageModule", function() { return TaskDetailPageModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__inventory_transfer__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__task_detail__ = __webpack_require__(298);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -18,23 +18,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-var InventoryTransferPageModule = (function () {
-    function InventoryTransferPageModule() {
+var TaskDetailPageModule = (function () {
+    function TaskDetailPageModule() {
     }
-    return InventoryTransferPageModule;
+    return TaskDetailPageModule;
 }());
-InventoryTransferPageModule = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
+TaskDetailPageModule = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["NgModule"])({
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_2__inventory_transfer__["a" /* InventoryTransferPage */],
+            __WEBPACK_IMPORTED_MODULE_2__task_detail__["a" /* TaskDetailPage */],
         ],
         imports: [
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* IonicPageModule */].forChild(__WEBPACK_IMPORTED_MODULE_2__inventory_transfer__["a" /* InventoryTransferPage */]),
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* IonicPageModule */].forChild(__WEBPACK_IMPORTED_MODULE_2__task_detail__["a" /* TaskDetailPage */]),
         ],
     })
-], InventoryTransferPageModule);
+], TaskDetailPageModule);
 
-//# sourceMappingURL=inventory-transfer.module.js.map
+//# sourceMappingURL=task-detail.module.js.map
 
 /***/ })
 

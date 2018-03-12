@@ -1,0 +1,293 @@
+<!--
+  Generated template for the NewPage page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    <ion-navbar>
+        <button ion-button clear (click)="dismiss(event)">OK</button>
+        <ion-title>Recurrence Information</ion-title>
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+    <ion-list class="maintext" no-lines>
+        <ion-item>
+            <ion-label floatting>Recurring Pattern</ion-label>
+            <ion-select [(ngModel)]="event.RecurPat" multiple="false" interface="popover">
+                <ion-option *ngFor="let pat of recurPats" [value]="pat.Code">
+                    {{pat.Name}}
+                </ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item *ngIf="event.RecurPat == 'D'">
+            <ion-label floatting>Repeat option</ion-label>
+            <ion-select [(ngModel)]="event.SubOption" multiple="false" interface="popover">
+                <ion-option [value]="1">
+                    Amount of Days
+                </ion-option>
+                <ion-option [value]="2">
+                    Every Week Day
+                </ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item *ngIf="(event.RecurPat != 'N' && event.RecurPat != 'D') || (event.RecurPat == 'D' && event.SubOption == 1)">
+            <ion-grid item-content>
+                <ion-row>
+                    <ion-col col-6>
+                        <ion-label>Repeat Every</ion-label>
+                    </ion-col>
+                    <ion-col col-3>
+                        <ion-input [(ngModel)]="event.Interval" type="number"></ion-input>
+                    </ion-col>
+                    <!-- #region Repeat label-->
+                    <ion-col col-3 *ngIf="event.RecurPat == 'D'">
+                        <ion-label>Day(s)</ion-label>
+                    </ion-col>
+                    <ion-col col-3 *ngIf="event.RecurPat == 'W'">
+                        <ion-label>Week(s)</ion-label>
+                    </ion-col>
+                    <ion-col col-3 *ngIf="event.RecurPat == 'M'">
+                        <ion-label>Month(s)</ion-label>
+                    </ion-col>
+                    <ion-col col-3 *ngIf="event.RecurPat == 'A'">
+                        <ion-label>Years(s)</ion-label>
+                    </ion-col>
+                    <!-- #endregion -->
+                </ion-row>
+            </ion-grid>
+        </ion-item>
+        <ion-item *ngIf="event.RecurPat == 'W'">
+            <ion-label [color]="monColor" (click)="checkWeekDays('mon')" style=" text-decoration: underline;">Mon</ion-label>
+            <ion-label [color]="tueColor" (click)="checkWeekDays('tue')" style=" text-decoration: underline;">Tue</ion-label>
+            <ion-label [color]="wedColor" (click)="checkWeekDays('wed')" style=" text-decoration: underline;">Wed</ion-label>
+            <ion-label [color]="thuColor" (click)="checkWeekDays('thu')" style=" text-decoration: underline;">Thu</ion-label>
+            <ion-label [color]="friColor" (click)="checkWeekDays('fri')" style=" text-decoration: underline;">Fri</ion-label>
+            <ion-label [color]="satColor" (click)="checkWeekDays('sat')" style=" text-decoration: underline;">Sat</ion-label>
+            <ion-label [color]="sunColor" (click)="checkWeekDays('sun')" style=" text-decoration: underline;">Sun</ion-label>
+        </ion-item>
+        <ion-item *ngIf="event.RecurPat == 'M'">
+            <ion-label floatting>Repeat on</ion-label>
+            <ion-select [(ngModel)]="event.SubOption" multiple="false" interface="popover">
+                <ion-option [value]="1">
+                    Exact Date
+                </ion-option>
+                <ion-option [value]="2">
+                    Day of week
+                </ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item *ngIf="event.RecurPat == 'A'">
+            <ion-label floatting>Repeat on</ion-label>
+            <ion-select [(ngModel)]="event.SubOption" multiple="false" interface="popover">
+                <ion-option [value]="1">
+                    Exact Date
+                </ion-option>
+                <ion-option [value]="2">
+                    Day of month
+                </ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item *ngIf="(event.RecurPat == 'M' || event.RecurPat == 'A') && event.SubOption == 1">
+            <ion-label *ngIf="event.RecurPat == 'M'">Day</ion-label>
+            <ion-select *ngIf="event.RecurPat == 'A'" [(ngModel)]="event.Month" multiple="false" interface="popover" placeholder="Month"
+                style="float:right">
+                <ion-option [value]="1">
+                    January
+                </ion-option>
+                <ion-option [value]="2">
+                    February
+                </ion-option>
+                <ion-option [value]="3">
+                    March
+                </ion-option>
+                <ion-option [value]="4">
+                    April
+                </ion-option>
+                <ion-option [value]="5">
+                    May
+                </ion-option>
+                <ion-option [value]="6">
+                    June
+                </ion-option>
+                <ion-option [value]="7">
+                    July
+                </ion-option>
+                <ion-option [value]="8">
+                    August
+                </ion-option>
+                <ion-option [value]="9">
+                    September
+                </ion-option>
+                <ion-option [value]="10">
+                    October
+                </ion-option>
+                <ion-option [value]="11">
+                    November
+                </ion-option>
+                <ion-option [value]="12">
+                    December
+                </ion-option>
+            </ion-select>
+            <ion-input type="number" [(ngModel)]="event.DayInMonth" place-holder="Day"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="(event.RecurPat == 'M' ||event.RecurPat == 'A') && event.SubOption == 2">
+            <ion-select [(ngModel)]="event.Week" multiple="false" interface="popover" placeholder="Week"  style="position: relative">
+                <ion-option [value]="1">
+                    First
+                </ion-option>
+                <ion-option [value]="2">
+                    Second
+                </ion-option>
+                <ion-option [value]="3">
+                    Third
+                </ion-option>
+                <ion-option [value]="4">
+                    Fourth
+                </ion-option>
+                <ion-option [value]="5">
+                    Last
+                </ion-option>
+            </ion-select>
+            <ion-select [(ngModel)]="event.DayOfWeek" multiple="false" interface="popover" placeholder="Day of week"  style="position: relative">
+                <ion-option [value]="8">
+                    Day
+                </ion-option>
+                <ion-option [value]="9">
+                    WeekDay
+                </ion-option>
+                <ion-option [value]="0">
+                    Weekend Day
+                </ion-option>
+                <ion-option [value]="1">
+                    Sunday
+                </ion-option>
+                <ion-option [value]="2">
+                    Monday
+                </ion-option>
+                <ion-option [value]="3">
+                    Tuesday
+                </ion-option>
+                <ion-option [value]="4">
+                    Wednesday
+                </ion-option>
+                <ion-option [value]="5">
+                    Thursday
+                </ion-option>
+                <ion-option [value]="6">
+                    Friday
+                </ion-option>
+                <ion-option [value]="7">
+                    Saturday
+                </ion-option>
+
+            </ion-select>
+            <span *ngIf="event.RecurPat == 'A'" item-content class="inline-edit">Of</span>
+            <ion-select item-right *ngIf="event.RecurPat == 'A'" [(ngModel)]="event.Month" multiple="false" interface="popover" placeholder="Month">
+                <ion-option [value]="1">
+                    January
+                </ion-option>
+                <ion-option [value]="2">
+                    February
+                </ion-option>
+                <ion-option [value]="3">
+                    March
+                </ion-option>
+                <ion-option [value]="4">
+                    April
+                </ion-option>
+                <ion-option [value]="5">
+                    May
+                </ion-option>
+                <ion-option [value]="6">
+                    June
+                </ion-option>
+                <ion-option [value]="7">
+                    July
+                </ion-option>
+                <ion-option [value]="8">
+                    August
+                </ion-option>
+                <ion-option [value]="9">
+                    September
+                </ion-option>
+                <ion-option [value]="10">
+                    October
+                </ion-option>
+                <ion-option [value]="11">
+                    November
+                </ion-option>
+                <ion-option [value]="12">
+                    December
+                </ion-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item *ngIf="event.RecurPat != 'N'">
+            <ion-grid item-content>
+                <!-- Thiết lập khoảng thời gian kết thúc cho chuỗi lặp lại -->
+                <ion-row>
+                    <ion-col col-2>
+                        <ion-label>Start</ion-label>
+                    </ion-col>
+                    <ion-col col-4></ion-col>
+                    <ion-col col-3>
+                        <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="event.SeStartDat" name="SeStartDat" disabled = "true"></ion-datetime>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col col-2>
+                        <ion-label>End</ion-label>
+                    </ion-col>
+                    <ion-col col-4>
+                        <ion-select [(ngModel)]="event.EndType" interface="popover" style="max-width: 100% ;">
+                            <ion-option value="N">
+                                No End Date
+                            </ion-option>
+                            <ion-option value="C">
+                                After
+                            </ion-option>
+                            <ion-option value="D">
+                                By
+                            </ion-option>
+                        </ion-select>
+                    </ion-col>
+                    <ion-col col-3>
+                        <ion-input [(ngModel)]="event.MaxOccur" type="number" *ngIf="event.EndType == 'C'"  style="position: relative"></ion-input>
+                        <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="event.SeEndDat" name="SeEndDat" *ngIf="event.EndType =='D'"  style="position: relative"></ion-datetime>
+                    </ion-col>
+                    <ion-col col-3>
+                        <ion-label *ngIf="event.EndType == 'C'"> Occurence(s)</ion-label>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
+            <!-- <ion-toggle ion-toggle-text ng-true-value="1" ng-false-value="2" [(ngModel)]="event.Interval">  </ion-toggle> -->
+        </ion-item>
+        <!-- <iton-item item-content>
+            <ion-toggle ion-toggle-text ng-model="simple">
+                Simple Example:
+                <b>{{ simple || false }}</b>
+            </ion-toggle>
+
+            <ion-toggle ion-toggle-text="online;offline" ng-model="customText">
+                Custom text:
+                <b>{{ customText || false }}</b>
+            </ion-toggle>
+
+            <ion-toggle ion-toggle-text ng-true-value="so true" ng-false-value="so false" ng-model="textByValue">
+                Text by value:
+                <b>{{ textByValue || 'so false' }}</b>
+            </ion-toggle>
+        </iton-item> -->
+    </ion-list>
+
+
+
+</ion-content>
+<ion-footer>
+
+
+</ion-footer>

@@ -15,7 +15,9 @@ $font-path: "../assets/fonts";
 $text-color:        #000;
 $background-color:  #fff;
 
+$text-input-placeholder-color: rgb(147, 146, 168);
 
+$checkbox-ios-item-start-margin-start:100px;
 // Named Color Variables
 // --------------------------------------------------
 // Named colors makes it easy to reuse colors on various components.
@@ -23,13 +25,15 @@ $background-color:  #fff;
 // to match your app's branding. Ionic uses a Sass map of
 // colors so you can add, rename and remove colors as needed.
 // The "primary" color is the only required color in the map.
-
+$checkbox-ios-icon-size:21px;
 $colors: (
   primary:    #488aff,
   secondary:  #32db64,
   danger:     #f53d3d,
   light:      #f4f4f4,
-  dark:       #222
+  dark:       #222,
+  maintext: rgb(47,46,68),
+  lighttext:rgb(117, 116, 133),
 );
 
 

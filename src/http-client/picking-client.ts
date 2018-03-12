@@ -14,7 +14,8 @@ export class PickingClient{
   }
 
   public getItem(barcode: string) {
-    //return this.helper.getDataSet('GetItemByBarcode', [{ name: 'barcode', value: barcode }]);
+   // return new Promise()
+   // return this.helper.getDataSet('GetItemByBarcode', [{ name: 'barcode', value: barcode }]);
   }
 
 }

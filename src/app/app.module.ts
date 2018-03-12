@@ -1,4 +1,4 @@
-import { NgModule, ErrorHandler } from '@angular/core';
+﻿import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule, Http } from '@angular/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
@@ -12,6 +12,7 @@ import { ReportCompletePage } from '../pages/report-complete/report-complete';
 import { InventoryTransferPage } from '../pages/inventory-transfer/inventory-transfer';
 import { BinConfirmPage } from '../pages/bin-confirm/bin-confirm';
 import { PickedConfirmPage } from '../pages/picked-confirm/picked-confirm';
+import { EventManagementPage1,CalendarPage } from '../pages/event-management/event-management';
 
 import { Api } from '../providers/api';
 import { Settings } from '../providers/settings';
@@ -20,7 +21,9 @@ import { ReportComplete } from '../providers/inventory/report-complete';
 import { Common } from '../providers/common';
 import { InventoryTransfers } from '../providers/inventory/inventory-transfers';
 import { PickedConfirm } from '../providers/inventory/picked-confirm';
-import { HttpClientRepository } from '../http-client/http-client';
+import { EventProvider } from '../providers/event/event';
+
+import { HttpClient } from '../http-client/http-client';
 import { HttpClientHelper } from './../http-client/http-helper';
 import { PickingClient } from '../http-client/picking-client';
 
@@ -31,6 +34,26 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TaskProvider } from '../providers/task/task';
+import { TaskManagementPage } from '../pages/task-management/task-management';
+
+import { TaskDetailPage } from '../pages/task-detail/task-detail';
+
+import { DevExtremeModule } from 'devextreme-angular';
+
+import { CommonsClient } from '../http-client/common-client';
+import { AutosizeDirective } from '../directives/autosize/autosize';
+import { ProjectProvider } from '../providers/project/project';
+import { MorePopoverPage } from '../pages/task-management/more-popover';
+import { TaskListPage } from '../pages/task-list/task-list';
+import { CflProvider } from '../providers/cfl/cfl';
+import { CommentProvider } from '../providers/comment/comment';
+import { TaskViewComponent } from '../components/task-view/task-view';
+import { SortPopoverPage } from '../pages/task-management/sort-popover';
+
+import { NgCalendarModule  } from 'ionic2-calendar';
+import { EventDetailPage,RecurrencePage } from '../pages/event-detail/event-detail';
+import { CalendarProvider } from '../providers/calendar/calendar';
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -63,11 +86,24 @@ export function provideSettings(storage: Storage) {
     ReportCompletePage,
     InventoryTransferPage,
     BinConfirmPage,
-    PickedConfirmPage
+    PickedConfirmPage,
+   EventManagementPage1,
+   EventDetailPage,
+   TaskManagementPage,
+    TaskDetailPage,
+    AutosizeDirective,
+    MorePopoverPage,
+    TaskListPage,
+    TaskViewComponent,
+   SortPopoverPage,
+   RecurrencePage,
+   CalendarPage
   ],
   imports: [
     BrowserModule,
     HttpModule,
+    DevExtremeModule, 
+    NgCalendarModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -76,7 +112,8 @@ export function provideSettings(storage: Storage) {
       }
     }),
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    DevExtremeModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -86,7 +123,17 @@ export function provideSettings(storage: Storage) {
     ReportCompletePage,
     InventoryTransferPage,
     BinConfirmPage,
-    PickedConfirmPage
+    PickedConfirmPage,
+    EventManagementPage1,
+    TaskManagementPage,
+    TaskDetailPage,
+    EventDetailPage,
+    MorePopoverPage,
+    TaskListPage,
+    TaskViewComponent,
+    SortPopoverPage,
+    RecurrencePage,
+    CalendarPage
   ],
   providers: [
     Api,
@@ -99,13 +146,20 @@ export function provideSettings(storage: Storage) {
     SplashScreen,
     StatusBar,
     PickedConfirm,
-    HttpClientRepository,
+    HttpClient,
     PickingClient,
     HttpClientHelper,
+    EventProvider,
     { provide: Settings, useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development
     { provide: ErrorHandler, useClass: IonicErrorHandler },
+    TaskProvider,
+    CommonsClient,
+    ProjectProvider,
+    CflProvider,
+    CommentProvider,
+CalendarProvider
+  ],
 
-  ]
 })
 export class AppModule { }

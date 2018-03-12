@@ -1,0 +1,151 @@
+<!--
+  Generated template for the TaskDetailPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title *ngIf="!isAdd">Event Detail</ion-title>
+    <ion-title *ngIf="isAdd">New Event</ion-title>
+    <div [ngSwitch]="tab">
+      <ion-buttons *ngSwitchCase="'detail'" end>
+        <button ion-button icon-left block clear (click)=addEvent() *ngIf="isAdd">
+          <ion-icon name="checkmark-circle"></ion-icon>
+          Add
+        </button>
+        <button ion-button icon-left block clear (click)="saveEvent()" *ngIf="!isAdd" type="submit">
+          <ion-icon name="checkmark-circle"></ion-icon>
+          Save
+        </button>
+      </ion-buttons>
+
+    </div>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <div>
+    <ion-segment [(ngModel)]="tab">
+      <ion-segment-button value="detail" *ngIf="!isAdd">
+        Details
+      </ion-segment-button>
+      <ion-segment-button value="comment" *ngIf="!isAdd">
+        Comments
+        <span *ngIf="dtComment && dtComment.length > 0">({{dtComment.length}}) </span>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div [ngSwitch]="tab">
+
+    <ion-list *ngSwitchCase="'detail'" class="maintext">
+
+      <ion-item>
+        <ion-input type="text" required class="maintext" [(ngModel)]="event.Details" name="Details" placeholder="Event..." style="font-weight:bold"
+          [attr.autofocus]="isAdd ? true : null"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floatting>User</ion-label>
+        <ion-select [(ngModel)]="groupUser" name="GroupUser" multiple="true">
+          <ion-option *ngFor="let user of dtUser" [value]="user.USERID">
+            {{user.U_NAME}}
+          </ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Location</ion-label>
+        <ion-select [(ngModel)]="event.Location" name="Location">
+          <ion-option *ngFor="let loc of dtLocation" [value]="loc.Code">
+            {{loc.Name}}
+          </ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>Start Date</ion-label>
+        <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="event.Recontact" name="Recontact" (ionChange)="recontactChanged($event)" style="position: relative"></ion-datetime>
+        <ion-datetime displayFormat="HH:mm" [(ngModel)]="beginTimeString" name="BeginTime" *ngIf="!event.AllDayEvent" style="position: relative"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label>Due Date</ion-label>
+        <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="event.endDate" name="endDate"  style="position: relative"></ion-datetime>
+        <ion-datetime displayFormat="HH:mm" [(ngModel)]="endTimeString" name="ENDTime" *ngIf="!event.AllDayEvent"  style="position: relative"></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+        <ion-checkbox item-end [(ngModel)]="event.AllDayEvent" (ionChange)="loadDefaultDate()"></ion-checkbox>
+        <ion-label text-right>All Day</ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-textarea [(ngModel)]="event.Notes" name="Notes" placeholder="Description..."></ion-textarea>
+      </ion-item>
+
+      <ion-item>
+        <ion-label floatting>Business Partner</ion-label>
+        <ion-select [(ngModel)]="event.CardCode">
+          <ion-option [value]="-1">
+            (No BP)
+          </ion-option>
+          <ion-option *ngFor="let bp of dtBP" [value]="bp.CardCode">
+            {{bp.CardName}}
+          </ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="black" (click)=presentRecurModal(event)>Recurring Pattern</ion-label>
+          <!-- <button ion-button  (click)=presentRecurModal(event)>
+            <ion-icon name="settings"></ion-icon>
+            asdfg
+          </button> -->
+          <ion-icon item-end name="settings" (click)="presentRecurModal(event)" color="primary"></ion-icon>
+        <ion-select [(ngModel)]="event.RecurPat" multiple="false" [disabled]="true">
+          <ion-option *ngFor="let pat of listRecur" [value]="pat.Code">
+            {{pat.Name}}
+          </ion-option>
+        </ion-select>
+      </ion-item>
+
+
+    </ion-list>
+
+
+
+    <ion-list *ngSwitchCase="'comment'" style="padding-bottom:20px">
+      <button ion-item *ngFor="let comment of dtComment" (press)="clickComment(comment)">
+        <ion-row>
+          <ion-col class="maintext" style="font-size:1.1em;color:#488aff"> {{comment.UserName}} </ion-col>
+          <ion-col style="font-size:0.75em;color:rgb(172, 172, 172);text-align: right;margin-top:10px;"> {{common.formatCreateDate(comment.CreatedTime)}} </ion-col>
+        </ion-row>
+        <ion-row>
+
+        </ion-row>
+        <ion-row style="white-space:normal">
+          <ion-col style="color:rgb(68, 68, 80)"> {{comment.Content}} </ion-col>
+        </ion-row>
+
+      </button>
+    </ion-list>
+  </div>
+
+
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-toolbar *ngIf="tab=='detail' && !isAdd" style="text-align:center; color:rgb(172,172,172)">
+
+    Created {{common.formatCreateDate(event.CntctDate, 'on ')}}
+    <span *ngIf="event.AssignedBy!=event.GroupUser">, by {{getUserName(event.AssignedBy)}} </span>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="tab=='comment'">
+    <ion-input class="maintext" style="font-size:1.2em;padding-bottom:9px;padding-left:13px" placeholder="Add a comment..." [(ngModel)]="commentText"
+      (keydown.enter)="addComment()"></ion-input>
+  </ion-toolbar>
+</ion-footer>

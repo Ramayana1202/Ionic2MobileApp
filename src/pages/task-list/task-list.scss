@@ -1,0 +1,16 @@
+page-task-list {
+    ion-buttons button[icon-only].my-style-for-modal {
+        margin: 0 6px;
+        min-width: 36px;
+     }
+     .overdue{
+        color:rgb(204, 59, 74);
+     }
+     .underdue{
+         color:rgb(0, 153, 204);
+     }
+     .maintext{
+         color:rgb(47, 46, 68);
+     }
+    
+}

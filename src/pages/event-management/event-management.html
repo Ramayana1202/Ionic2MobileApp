@@ -1,0 +1,73 @@
+<!--
+  Generated template for the EventManagementPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Event Management</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only clear (click)="showCalendar();">
+        <ion-icon ios="ios-calendar" md="md-calendar"></ion-icon>
+      </button>
+      <button ion-button icon-only clear (click)="addNewEvent();">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+  <!-- <ion-navbar color="primary">
+    <ion-title>{{viewTitle}}</ion-title>
+    <ion-buttons end>
+      <button ion-button [disabled]="isToday" (click)="today()">Today</button>
+      <button ion-button (click)="changeMode('month')">M</button>
+      <button ion-button (click)="changeMode('week')">W</button>
+      <button ion-button (click)="changeMode('day')">D</button>
+      <button ion-button (click)="loadCalendar()">Load Events</button>
+    </ion-buttons>
+  </ion-navbar> -->
+</ion-header>
+
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-searchbar [(ngModel)]="myInput" [showCancelButton]="false" (ionInput)="onInput($event)" (ionClear)="onCancel($event)">
+  </ion-searchbar>
+
+  <ion-list>
+    <ion-list-header (click)="toggleDetails()">
+      <ion-icon color="primary" item-right [name]="icon"></ion-icon>
+      Reccent Events
+    </ion-list-header>
+    <div *ngIf="showDetails">
+      <button ion-item *ngFor="let event of dtEvent" (tap)="fillInfo(event)" (press)="showActionSheet(event)">
+        <ion-row style="white-space:normal">
+
+          <ion-col class="maintext" style="font-size:1.1em;">
+            {{event.Details}}
+          </ion-col>
+
+        </ion-row>
+        <ion-row>
+          <ion-col style="color:rgb(109, 78, 69);white-space:normal">{{getUserName(event.GroupUser)}}</ion-col>
+          <ion-col class="overdue" col-2>
+            <!-- {{formatDueDate(task)}} -->
+          </ion-col>
+        </ion-row>
+      </button>
+    </div>
+  </ion-list>
+  <!-- <ion-calendar></ion-calendar> -->
+
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data..."></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+  <!-- <calendar [eventSource]="eventSource" [calendarMode]="calendar.mode" [currentDate]="calendar.currentDate" (onEventSelected)="onEventSelected($event)"
+    (onTitleChanged)="onViewTitleChanged($event)" (onTimeSelected)="onTimeSelected($event)" step="30" class="calendar"> -->
+  <!-- </calendar> -->
+</ion-content>

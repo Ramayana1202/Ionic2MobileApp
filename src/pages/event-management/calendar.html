@@ -1,0 +1,55 @@
+<!--
+  Generated template for the EventManagementPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Activity Calendar</ion-title>
+  </ion-navbar>
+  <ion-navbar color="primary">
+    <ion-label style="color:white">{{viewTitle}}</ion-label>
+    <ion-buttons end>
+      <button ion-button [disabled]="isToday" (click)="today()">Today</button>
+      <button ion-button (click)="changeMode('month')">M</button>
+      <button ion-button (click)="changeMode('week')">W</button>
+      <button ion-button (click)="changeMode('day')">D</button>
+      <!-- <button ion-button (click)="loadCalendar()">Load Events</button> -->
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <template #template let-view="displayEvent">
+        <div class="calendar-event-inner">{{displayEvent.event.title}}</div>
+  </template>
+  <template #template1 let-view="view"  let-row="row" let-col="col">
+      {{view.dates[row*7+col].label}}
+</template>
+  <calendar 
+  
+  [monthviewDisplayEventTemplate] = "template1"
+  [eventSource]="eventSource" 
+  [calendarMode]="calendar.mode" 
+  [currentDate]="calendar.currentDate" 
+  [showEventDetail] = "true"
+  (onEventSelected)="onEventSelected($event)"
+    (onTitleChanged)="onViewTitleChanged($event)" 
+    (onTimeSelected)="onTimeSelected($event)" step="30" class="calendar">
+  </calendar>
+  <ion-fab middle right edge #fab>
+    <button ion-fab color="danger"><ion-icon name="add"></ion-icon></button>
+    <ion-fab-list side = "top">
+      <button ion-fab color="danger" >Task</button>
+      <button ion-fab color="danger" (click)="addNewEvent(fab)">Event</button>
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>

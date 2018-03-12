@@ -1,14 +1,14 @@
 webpackJsonp([0],{
 
-/***/ 317:
+/***/ 1358:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReportCompletePageModule", function() { return ReportCompletePageModule; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TaskManagementPageModule", function() { return TaskManagementPageModule; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__report_complete__ = __webpack_require__(63);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_ionic_angular__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__task_management__ = __webpack_require__(297);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -18,23 +18,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-var ReportCompletePageModule = (function () {
-    function ReportCompletePageModule() {
+var TaskManagementPageModule = (function () {
+    function TaskManagementPageModule() {
     }
-    return ReportCompletePageModule;
+    return TaskManagementPageModule;
 }());
-ReportCompletePageModule = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["L" /* NgModule */])({
+TaskManagementPageModule = __decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["NgModule"])({
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_2__report_complete__["a" /* ReportCompletePage */],
+            __WEBPACK_IMPORTED_MODULE_2__task_management__["a" /* TaskManagementPage */],
         ],
         imports: [
-            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* IonicPageModule */].forChild(__WEBPACK_IMPORTED_MODULE_2__report_complete__["a" /* ReportCompletePage */]),
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* IonicPageModule */].forChild(__WEBPACK_IMPORTED_MODULE_2__task_management__["a" /* TaskManagementPage */]),
         ],
     })
-], ReportCompletePageModule);
+], TaskManagementPageModule);
 
-//# sourceMappingURL=report-complete.module.js.map
+//# sourceMappingURL=task-management.module.js.map
 
 /***/ })
 

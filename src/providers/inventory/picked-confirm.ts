@@ -1,4 +1,4 @@
-import { HttpClientRepository } from './../../http-client/http-client';
+import { HttpClient } from './../../http-client/http-client';
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Api } from '../api';
@@ -24,13 +24,13 @@ export class PickedConfirm {
   controller = 'Picking'
 
   constructor(public http: Http, public api: Api,
-  public httpClient:HttpClientRepository) {
+  public httpClient:HttpClient) {
 
   }
 
   async LoadBatchLine(docEntry: number, lineNum: number) {
     //return await this.api.getAsyncDataSet(this.controller, 'LoadBatchLine', [{ name: 'docEntry', value: docEntry }, { name: 'lineNum', value: lineNum }]);
-    return this.httpClient.Picking.LoadBatchLine( docEntry , lineNum);
+    return await this.httpClient.Picking.LoadBatchLine( docEntry , lineNum);
   }
 
   getItem(barcode: string) {

@@ -105,6 +105,7 @@ export class Api {
     })
   }
 
+  //#region Luannt
   async getAsyncDataSet(controller: string, action: string, params?: { name: any, value: any }[], options?: RequestOptions) {
     if (!options) {
       options = this.creatOption();
@@ -147,6 +148,27 @@ export class Api {
       console.log(err);
     })
   }
+
+  async postAsyncDataTable(controller: string, endpoint: string, body: any, options?: RequestOptions) {
+    if (!options) {
+      options = this.creatOption();
+    }
+    return await new Promise(resolve => {
+      this.http.post(this.url + '/' + controller + '/' + endpoint, body, options)
+        .map(res => res.json())
+        .subscribe(data => {
+          let dataTable: any;
+          dataTable = this.ApzJsonDeserialize(data);
+          resolve(dataTable);
+          Error => {
+            console.log(Error);
+          }
+        });
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+  //#endregion
 
   post(controller: string, endpoint: string, body: any, options?: RequestOptions) {
     if (!options) {

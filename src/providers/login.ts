@@ -5,6 +5,8 @@ import { Settings } from './settings';
 import {HttpClientHelper} from '../http-client/http-helper'
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
+import { Encrypt, Decrypt } from '../lib/ApzRsa';
+import { HttpClient } from '../http-client/http-client';
 
 
 
@@ -13,7 +15,7 @@ export class Login {
   public listCompany: any;
   _login: any;
 
-  constructor(public http: Http, public api: Api, public setting: Settings, public httpHelper:HttpClientHelper) {
+  constructor(public http: Http, public api: Api, public setting: Settings, public httpHelper:HttpClientHelper, public httpClient:HttpClient) {
   }
 
   initApi() {
@@ -52,6 +54,8 @@ export class Login {
     this.setting.settings.domain = loginInfo.Doimain;
     this.setting.settings.company = loginInfo.DbName;
     this.setting.settings.userName = loginInfo.UserName;
+    this.setting.settings.UserNameLogin = loginInfo.UserNameLogin;
+    this.setting.settings.userSign=loginInfo.UserSign;
     this.setting.save();
   }
 
@@ -59,19 +63,39 @@ export class Login {
    * Send a POST request to our login endpoint with the data
    * the user entered on the form.
    */
-  login(loginInfo: any) {
-    let seq = this.api.post('LoginIRS', 'PDALogin', loginInfo).share();
+ login(loginInfo) {
+    var _loginInfo: any = {};
+    _loginInfo.Doimain = Encrypt(loginInfo.Doimain);
+    _loginInfo.DbName = Encrypt(loginInfo.DbName);
+    _loginInfo.UserName = Encrypt(loginInfo.UserName);
+    _loginInfo.Password = Encrypt(loginInfo.Password);
+    _loginInfo.BuildVersion = Encrypt("000");
+    _loginInfo.ClientVersion =Encrypt("2.00");
+    let seq = this.api.post('LoginIRS', 'Login', _loginInfo).share();
     seq
       .map(res => res.json())
-      .subscribe(res => {
+      .subscribe( res => {
         console.log(res);
         // If the API returned a successful response, mark the user as logged in
-        if (res.Message == '') {
-          this._loggedIn(loginInfo);
-          this.saveLoginInfor(loginInfo);
-          this.api._sessionId = res.Content;
+        if (Decrypt(res.Message) == "success") {
+          this.api._sessionId = Decrypt(res.Content).split(",", 1);
+
+          this.httpClient.Common.getUserLoginInfo(loginInfo.UserName).then(additionLoginInfo => {
+            if (additionLoginInfo[0]) {
+              loginInfo.UserSign = additionLoginInfo[0].UserID;
+              loginInfo.UserNameLogin = additionLoginInfo[0].U_NAME;
+            }
+            this._loggedIn(loginInfo);  
+            this.saveLoginInfor(loginInfo);
+            
+          }).catch(res => {
+            this._loggedIn(loginInfo);
+            this.saveLoginInfor(loginInfo);
+            })
+          ;  
+        
         } else {
-          console.error('ERROR', res.Message);
+          console.error('ERROR', Decrypt(res.Message));
         }
       }, err => {
         console.error('ERROR', err);
@@ -103,5 +127,14 @@ export class Login {
    */
   _loggedIn(loginInfo) {
     this._login = loginInfo;
+  }
+
+
+  async getUserSign(nameLogin: string) {
+    return await this.api.getDataTable("Users", "GetUserSign", [{name: "nameLogin",value: nameLogin}]);
+  }
+
+  async getUserLogin(userName: string) {
+    return await this.api.getDataTable("Users", "GetUserLogin", [{name: "madk",value: userName}]);
   }
 }

@@ -1,0 +1,187 @@
+<!--
+  Generated template for the TaskDetailPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header  class="bar-light ">
+
+  <ion-navbar>
+    <ion-title>Task: {{task.Details}}</ion-title>
+    
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <div>
+  <ion-segment [(ngModel)]="tab">
+      <ion-segment-button value="detail">
+          Details
+        </ion-segment-button>
+        <ion-segment-button value="subtask">
+          Sub Tasks <span *ngIf="dtTask && dtTask.length > 0">({{dtTask.length}}) </span>
+        </ion-segment-button>
+        <!-- <ion-segment-button value="attachment">
+          Attachments <span *ngIf="dtAttachment && dtAttachment.length > 0">({{dtAttachment.length}}) </span>
+         </ion-segment-button> -->
+        <ion-segment-button value="comment">
+           Comments <span *ngIf="dtComment && dtComment.length > 0">({{dtComment.length}}) </span>
+          </ion-segment-button>
+  </ion-segment>
+</div>
+  <div [ngSwitch]="tab">
+  <ion-list *ngSwitchCase="'detail'" class="maintext">
+    <!-- <ion-item>
+      <ion-label >ClgCode</ion-label>
+      <ion-input [(ngModel)]="task.ClgCode"></ion-input>
+    </ion-item> -->
+
+    <ion-item>
+      <!-- <ion-label>Task</ion-label> -->
+      <ion-textarea class="maintext" autosize [(ngModel)]="task.Details" placeholder="Task..." style="font-weight:bold" [attr.autofocus]="isAdd ? true : null"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-textarea autosize [(ngModel)]="task.Notes" placeholder="Description..."></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floatting>Assign to</ion-label>
+      <ion-select [(ngModel)]="groupUser" multiple="true">
+        <ion-option *ngFor="let user of dtUser" [value]="user.USERID">
+          {{user.U_NAME}}
+        </ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Due date</ion-label>
+      <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="task.endDate" cancelText="Clear" (ionCancel)="clearDate($event)" (ionChange)="validateDueDate()" ></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Due time</ion-label>
+      <ion-datetime displayFormat="H:mm" [(ngModel)]="endTime" (ionChange)="validateDueDate()" ></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Start date</ion-label>
+      <ion-datetime displayFormat="DD/MM/YYYY" [(ngModel)]="task.Recontact" ></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Start time</ion-label>
+      <ion-datetime displayFormat="H:mm" [(ngModel)]="beginTime"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floatting>Project</ion-label>
+      <ion-select [(ngModel)]="task.ProjectEntry" (ionChange)="loadProjectTask(task.ProjectEntry, true)">
+        <ion-option [value]="-1">
+          (No Project)
+        </ion-option>
+        <ion-option *ngFor="let project of dtProject" [value]="project.AbsEntry">
+          {{project.Code}} - {{project.Name}}
+        </ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floatting>Project WBS</ion-label>
+      <ion-select [(ngModel)]="task.ProjectWBS">
+        <ion-option [value]="-1">
+          (No WBS)
+        </ion-option>
+        <ion-option *ngFor="let wbs of dtProjectTask" [value]="wbs.TaskCode">
+          {{wbs.TaskCode}} - {{wbs.TaskName}}
+        </ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floatting>Business Partner</ion-label>
+      <ion-select [(ngModel)]="task.CardCode">
+        <ion-option [value]="-1">
+          (No BP)
+        </ion-option>
+        <ion-option *ngFor="let bp of dtBP" [value]="bp.CardCode">
+          {{bp.CardName}}
+        </ion-option>
+      </ion-select>
+    </ion-item>
+
+  </ion-list>
+
+  <div *ngSwitchCase="'subtask'">
+    <!-- <task-view [taskStatus]="''"></task-view> -->
+      <ion-input class="maintext"  style="font-size:1.2em;padding-bottom:9px;padding-left:13px" placeholder="Add a sub task..." [(ngModel)]="addText" (keydown.enter)="buttonAddClick()"></ion-input>   
+      <ion-list>
+          <ion-item [style.background-color]="_task.Closed==='Y'? 'rgb(200, 200, 200)':'white'" *ngFor="let _task of dtTask">
+            <ion-checkbox mode="ios" style="margin-right:30px" (ionChange)="taskStatusChanged(_task)" [checked]="_task.Closed==='Y'"></ion-checkbox>
+            <ion-label style="margin:0px;">
+              <button (press)="showActionSheet(_task)" (tap)="fillInfo(_task)" [style.background-color]="_task.Closed==='Y'? 'rgb(200, 200, 200)':'white'"  ion-item no-lines >
+                            <ion-row style="white-space:normal;" >
+                               <ion-col class="maintext" style="font-size:1.1em;"> {{_task.Details}} </ion-col>
+                             </ion-row>
+        
+                             <ion-row>
+                              <ion-col style="color:rgb(109, 78, 69);white-space:normal">{{getUserName(_task.GroupUser)}}</ion-col> 
+                              <ion-col *ngIf="isOverdue(_task)" class="overdue" col-2 style="text-align: right;" >{{formatDueDate(_task)}}</ion-col>
+                              <ion-col *ngIf="!isOverdue(_task)" class="underdue" col-2 style="text-align: right;" >{{formatDueDate(_task)}}</ion-col>
+                             </ion-row>  
+                             <ion-row style="color:gray;font-size:0.8em" *ngIf="_task.ProjectEntry > 0">
+                              <ion-col >{{getProjectName(_task.ProjectEntry)}}<span *ngIf="_task.ProjectWBS"> - {{_task.ProjectWBS}} </span>  </ion-col> 
+                             </ion-row> 
+                            
+                                     
+              </button>
+            </ion-label>
+          </ion-item>          
+          </ion-list>
+  </div>
+
+  <ion-list *ngSwitchCase="'attachment'" style="padding-bottom:20px">
+    <button ion-item *ngFor="let attachment of dtAttachment" (click)="openFile(attachment)">
+                      <ion-row  >
+                          <ion-col class="maintext" style="font-size:1.1em;color:rgb(143, 119, 119)"> {{attachment.FileName}} </ion-col>
+                          <ion-col style="font-size:0.75em;color:rgb(173, 173, 173);text-align: right;margin-top:10px;"> {{common.formatCreateDate(attachment.Date)}} </ion-col>
+                      </ion-row>  
+                      <ion-row>
+                     
+                         
+                      </ion-row>  
+                      <ion-row style="white-space:normal" >
+                         <ion-col  style="font-size:0.85em;color:rgb(73, 73, 105)"> {{attachment.trgtPath}}\{{attachment.FileName}}.{{attachment.FileExt}} </ion-col>
+                      </ion-row>                      
+                               
+    </button>          
+  </ion-list>
+
+  <ion-list *ngSwitchCase="'comment'" style="padding-bottom:20px">
+    <button ion-item *ngFor="let comment of dtComment" (click)="clickComment(comment)">
+                      <ion-row  >
+                          <ion-col class="maintext" style="font-size:1.1em;color:#488aff"> {{comment.UserName}} </ion-col>
+                          <ion-col style="font-size:0.75em;color:rgb(173, 173, 173);text-align: right;margin-top:10px;"> {{common.formatCreateDate(comment.CreatedTime)}} </ion-col>
+                      </ion-row>  
+                      <ion-row>
+                         
+                      </ion-row>  
+                      <ion-row style="white-space:normal" >
+                         <ion-col  style="color:rgb(68, 68, 80)"> {{comment.Content}} </ion-col>
+                      </ion-row>                      
+                               
+    </button>          
+  </ion-list>
+
+</div>
+</ion-content>
+<ion-footer >
+    <ion-toolbar *ngIf="tab=='detail'" style="text-align:center; color:rgb(172,172,172)">
+     Created {{common.formatCreateDate(task.CntctDate, 'on ')}} <span *ngIf="task.AssignedBy!=task.GroupUser">, by {{getUserName(task.AssignedBy)}} </span>
+      </ion-toolbar>
+    <ion-toolbar *ngIf="tab=='comment'">
+        <ion-input class="maintext"  style="font-size:1.2em;padding-bottom:9px;padding-left:13px" placeholder="Add a comment..." [(ngModel)]="commentText" (keydown.enter)="addComment()"></ion-input>   
+      </ion-toolbar>
+</ion-footer>
