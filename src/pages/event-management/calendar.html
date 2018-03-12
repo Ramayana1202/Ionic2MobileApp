@@ -28,12 +28,12 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <template #template let-view="displayEvent">
+  <ng-template #template let-view="displayEvent">
         <div class="calendar-event-inner">{{displayEvent.event.title}}</div>
-  </template>
-  <template #template1 let-view="view"  let-row="row" let-col="col">
+  </ng-template>
+  <ng-template #template1 let-view="view"  let-row="row" let-col="col">
       {{view.dates[row*7+col].label}}
-</template>
+</ng-template>
   <calendar 
   
   [monthviewDisplayEventTemplate] = "template1"
@@ -41,9 +41,14 @@
   [calendarMode]="calendar.mode" 
   [currentDate]="calendar.currentDate" 
   [showEventDetail] = "true"
+  [queryMode] = "'remote'"
+  [locale]="calendar.locale"
   (onEventSelected)="onEventSelected($event)"
     (onTitleChanged)="onViewTitleChanged($event)" 
-    (onTimeSelected)="onTimeSelected($event)" step="30" class="calendar">
+    (onTimeSelected)="onTimeSelected($event)" 
+    (onRangeChanged) = "onRangeChanged($event)"
+    step="30" class="calendar"
+    >
   </calendar>
   <ion-fab middle right edge #fab>
     <button ion-fab color="danger"><ion-icon name="add"></ion-icon></button>

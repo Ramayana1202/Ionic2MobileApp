@@ -30,6 +30,8 @@ export class EventManagementPage1 {
   private dtEvent: any;
   private dtStruct: any;
   dtUser: Array<any>;
+  skip: number = 0;
+  limit: number = 15;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -62,15 +64,15 @@ export class EventManagementPage1 {
     if (this.dtUser === undefined) return "";
     if (groupUser === undefined || groupUser === null) return "";
     var userList = groupUser.split(";");
-    var resultUsers = this.dtUser.filter(user => userList.indexOf(user.USERID.toString())> -1);
+    var resultUsers = this.dtUser.filter(user => userList.indexOf(user.USERID.toString()) > -1);
     var value = "";
-    for (var i = 0; i < resultUsers.length; i++){
+    for (var i = 0; i < resultUsers.length; i++) {
       value += resultUsers[i].U_NAME + "; ";
     }
     if (value.length > 0) {
-      value = value.slice(0,value.length - 2);
+      value = value.slice(0, value.length - 2);
     }
-   
+
     return value;
   }
 
@@ -111,7 +113,7 @@ export class EventManagementPage1 {
   doRefresh(refresher) {
     try {
       console.log('Begin async operation', refresher);
-
+      this.skip = 0;
       setTimeout(() => {
         this.initializeItems();
         console.log('Async operation has ended');
@@ -127,9 +129,7 @@ export class EventManagementPage1 {
       console.log('Begin async operation');
 
       setTimeout(() => {
-        // for (let i = 0; i < 30; i++) {
-        //   this.dtEvent.push(this.dtEvent.length);
-        // }
+        this.initializeItems();
 
         console.log('Async operation has ended');
 
@@ -315,14 +315,28 @@ export class EventManagementPage1 {
         "Type": "DateTime",
         "dflt": null
       };
+      let col4 = {
+        "Name": "skip",
+        "Type": "Int32",
+        "dflt": null
+      };
+      let col5 = {
+        "Name": "limit",
+        "Type": "Int32",
+        "dflt": null
+      };
       cols.push(col1);
       cols.push(col2);
       cols.push(col3);
+      cols.push(col4);
+      cols.push(col5);
 
       let rows = [{
-        "startDate": "2017-02-28",
+        "startDate": "",
         "userCode": GlobalData.UserCodeLogin,
         "endDate": "",
+        "skip": this.skip,
+        "limit": this.limit
       }];
 
       let dt = this.common.ToApzJson(rows, cols);
@@ -341,12 +355,15 @@ export class EventManagementPage1 {
 
   async loadEvent(data: any) {
     try {
-      var result = await this.httpClient.Event.loadEvent(data);
-      if (result != null) {
-        this.dtEvent = result;
-      }
-      else {
-        this.dtEvent = [];
+      var result: any = [];
+      var rs = await this.httpClient.Event.loadEvent(data);
+      result = rs;
+      this.dtEvent = [];
+      if (result.length > 0) {
+        for (let record of result) {
+          this.dtEvent.push(record);
+        }
+        this.limit += 10;
       }
 
     } catch (error) {
@@ -398,10 +415,13 @@ export class CalendarPage {
   isToday: boolean;
   calendar = {
     mode: 'month',
-    currentDate: new Date()
+    currentDate: new Date(),
+    locale: 'vi-VN'
   }; // these are the variable used by the calendar.
+  start: string = new Date().toISOString();
+  end: string = new Date().toISOString()
   selectedInterval: Date = new Date();
-  async procesesLoad() {
+  async processLoad() {
     try {
       let cols = [];
       let col1 = {
@@ -427,8 +447,8 @@ export class CalendarPage {
       var param: any = {};
       let rows: any = [];
       param.userCode = GlobalData.UserCodeLogin;
-      param.startDate = "2017-02-28";
-      param.endDate = "";
+      param.startDate = this.start;
+      param.endDate = this.end;
       rows.push(param);
       let dt = this.common.ToApzJson(rows, cols);
 
@@ -485,7 +505,7 @@ export class CalendarPage {
       });
 
       loading.present();
-      await this.procesesLoad();
+      await this.processLoad();
       loading.dismiss();
       // setTimeout(() => {
       //   loading.dismiss();
@@ -589,7 +609,10 @@ export class CalendarPage {
   }
 
   onRangeChanged(ev) {
-    console.log('range changed: startTime: ' + ev.startTime + ', endTime: ' + ev.endTime);
+    console.log('range changed: startTime: ' + ev.startTime.toISOString() + ', endTime: ' + ev.endTime.toISOString());
+    this.start = ev.startTime.toISOString();
+    this.end = ev.endTime.toISOString();
+    this.processLoad();
   }
   markDisabled = (date: Date) => {
     var current = new Date();
@@ -602,9 +625,11 @@ export class CalendarPage {
       console.log('Begin async operation', refresher);
 
       setTimeout(() => {
-        this.loadCalendar();
-        console.log('Async operation has ended');
-        refresher.complete();
+        this.processLoad().then(rs => {
+          console.log('Async operation has ended');
+          refresher.complete();
+        });
+        
       }, 2000);
     } catch (error) {
       this.common.createToast(error, 0);
